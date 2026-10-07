@@ -491,28 +491,29 @@ function Auth({
 
         </div>
 
-        <div className="auth-orbit">
+                <div className="auth-visualization">
+          <div className="vis-camera-field">
+            <div className="vis-ring" />
+            <div className="vis-ring" />
+            <div className="vis-ring" />
+            
+            <div className="vis-node" style={{ top: '20%', left: '40%' }} />
+            <div className="vis-node" style={{ top: '60%', left: '70%' }} />
+            <div className="vis-node" style={{ top: '75%', left: '30%' }} />
+            
+            <div className="vis-path" style={{ top: '20%', left: '40%', transform: 'rotate(25deg)' }} />
+            <div className="vis-path" style={{ top: '60%', left: '70%', transform: 'rotate(130deg)' }} />
 
-          <div className="orbit-ring ring-one" />
-          <div className="orbit-ring ring-two" />
-
-          <div className="orbit-core">
-            <Eye size={25} />
-            <small>OBSERVING</small>
+            <div className="vis-label" style={{ top: '15%', left: '45%' }}>
+              <i /> CAM 01 ONLINE
+            </div>
+            <div className="vis-label" style={{ top: '65%', left: '75%' }}>
+              <i /> EVENT DETECTED
+            </div>
+            <div className="vis-label" style={{ top: '80%', left: '20%' }}>
+              <i style={{ background: 'var(--warn)' }} /> TRACKING ACTIVE
+            </div>
           </div>
-
-          <div className="orbit-node n1">
-            CAM 01
-          </div>
-
-          <div className="orbit-node n2">
-            EVENT
-          </div>
-
-          <div className="orbit-node n3">
-            AI
-          </div>
-
         </div>
 
         <div className="auth-footer">
@@ -852,7 +853,7 @@ function Auth({
                 </>
               )}
 
-              <p className="switch">
+              <p className="auth-switch">
 
                 {mode === 'signup'
                   ? 'Already have an account? '
@@ -1391,27 +1392,27 @@ function CommandCenter({
                 </defs>
 
                 <CartesianGrid
-                  stroke="#1a2a20"
+                  stroke="#E4E7EC"
                   vertical={false}
                 />
 
                 <XAxis
                   dataKey="name"
-                  stroke="#718078"
+                  stroke="#667085"
                   axisLine={false}
                   tickLine={false}
                 />
 
                 <YAxis
-                  stroke="#718078"
+                  stroke="#667085"
                   axisLine={false}
                   tickLine={false}
                 />
 
                 <Tooltip
                   contentStyle={{
-                    background: '#122019',
-                    border: '1px solid #1a2a20',
+                    background: '#FFFFFF',
+                    border: '1px solid #E4E7EC',
                     borderRadius: 8
                   }}
                 />
@@ -1419,7 +1420,7 @@ function CommandCenter({
                 <Area
                   type="monotone"
                   dataKey="events"
-                  stroke="#22c55e"
+                  stroke="#16A34A"
                   fill="url(#fill)"
                   strokeWidth={2}
                 />
@@ -1427,7 +1428,7 @@ function CommandCenter({
                 <Line
                   type="monotone"
                   dataKey="alerts"
-                  stroke="#d9a441"
+                  stroke="#2563EB"
                   strokeWidth={2}
                   dot={false}
                 />
@@ -2617,39 +2618,39 @@ function Analytics() {
             <BarChart data={chartData}>
 
               <CartesianGrid
-                stroke="#1a2a20"
+                stroke="#E4E7EC"
                 vertical={false}
               />
 
               <XAxis
                 dataKey="name"
-                stroke="#718078"
+                stroke="#667085"
                 axisLine={false}
                 tickLine={false}
               />
 
               <YAxis
-                stroke="#718078"
+                stroke="#667085"
                 axisLine={false}
                 tickLine={false}
               />
 
               <Tooltip
                 contentStyle={{
-                  background: '#122019',
-                  border: '1px solid #1a2a20'
+                  background: '#FFFFFF',
+                  border: '1px solid #E4E7EC'
                 }}
               />
 
               <Bar
                 dataKey="events"
-                fill="#16a34a"
+                fill="#16A34A"
                 radius={[4, 4, 0, 0]}
               />
 
               <Bar
                 dataKey="alerts"
-                fill="#d9a441"
+                fill="#2563EB"
                 radius={[4, 4, 0, 0]}
               />
 
@@ -2671,9 +2672,9 @@ function Analytics() {
           <div className="severity-bars">
 
             {[
-              ['HIGH', 32, '#f97316'],
-              ['MEDIUM', 48, '#d9a441'],
-              ['INFO', 78, '#22c55e']
+              ['HIGH', 32, '#F97316'],
+              ['MEDIUM', 48, '#F59E0B'],
+              ['INFO', 78, '#0F766E']
             ].map((x) => (
               <div key={x[0]}>
 
@@ -3263,14 +3264,20 @@ export default function Page() {
 
   }, [])
 
-  if (loading) {
-    return null
-  }
-
   const publicPath =
     path === '/login' ||
     path === '/signup' ||
     path === '/forgot-password'
+
+  useEffect(() => {
+    if (!loading && !session && !publicPath) {
+      router.replace('/login')
+    }
+  }, [loading, session, publicPath, router])
+
+  if (loading) {
+    return null
+  }
 
   /* AUTHENTICATION PAGES */
 
@@ -3292,9 +3299,7 @@ export default function Page() {
   /* PROTECT APPLICATION */
 
   if (!session) {
-
-    router.replace('/login')
-
+    // Wait for the useEffect redirect to happen
     return null
   }
 
